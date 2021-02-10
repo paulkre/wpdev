@@ -5,7 +5,13 @@
   "main": "index.js",
   "author": "Paul Kretschel <paul.kretschel@icloud.com>",
   "license": "MIT",
-  "files": [
-    "/index.js"
-  ]
+  "files": ["/index.js"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulkre/wpdev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/paulkre/wpdev/issues"
+  },
+  "homepage": "https://github.com/paulkre/wpdev#readme"
 }
