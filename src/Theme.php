@@ -39,7 +39,7 @@ class Theme
 
   static function register_options(string $name, array $props)
   {
-    Util\ACF\OptionsPage::register($name, $props);
+    Lib\ACF\OptionsPage::register($name, $props);
   }
 
   static function register_activation_callback(callable $cb, $priority = 10)
