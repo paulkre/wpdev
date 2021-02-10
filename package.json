@@ -1,5 +1,6 @@
 {
   "name": "@paulkre/wpdev",
+  "description": "A library for developing modern WordPress themes",
   "version": "0.1.0",
   "main": "index.js",
   "author": "Paul Kretschel <paul.kretschel@icloud.com>",
