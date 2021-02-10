@@ -1,0 +1,13 @@
+{
+  "name": "app",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "start": "wpackio-scripts start",
+    "build": "wpackio-scripts build"
+  },
+  "dependencies": {
+    "@wpackio/entrypoint": "^5.0.0",
+    "@wpackio/scripts": "^5.0.0"
+  }
+}

@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #e0e0e0;
+  line-height: 1.65;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background-color: cyan;
+  color: black;
+}
+
+#wpadminbar {
+  position: fixed !important;
+}

@@ -1,0 +1,34 @@
+version: "3.2"
+
+services:
+  wp:
+    image: wordpress
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - ..:/var/www/html/wp-content/wpdev:ro
+      - .:/var/www/html/wp-content/themes/wpdev:ro
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wp
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: secret
+      WORDPRESS_TABLE_PREFIX: wp_
+    depends_on:
+      - db
+
+  admin:
+    image: adminer
+    restart: always
+    ports:
+      - 8000:8080
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
