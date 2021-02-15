@@ -4,17 +4,15 @@ namespace WPDev;
 
 class Enqueue
 {
-  const WPACKIO_ENTRIES_FILTER_KEY = 'theme/wpackio';
-
   public function __construct(string $app_name, string $entry_group = 'app', string $output_path = 'dist', string $entry_resolver_regex = '/^Src\\\UI\\\(\w+)\\\/')
   {
     $this->entry_resolver_regex = $entry_resolver_regex;
     $this->entry_group = $entry_group;
     $this->enqueue = new \WPackio\Enqueue($app_name ?? 'app', $output_path, null, 'theme');
+    $this->main_entries = [];
 
     \add_action('wp_enqueue_scripts', function () {
-      $entries = \apply_filters(self::WPACKIO_ENTRIES_FILTER_KEY, []);
-      foreach ($entries as &$entry)
+      foreach ($this->main_entries as &$entry)
         $this->enqueue($entry);
     });
   }
@@ -30,9 +28,7 @@ class Enqueue
     self::collect_entries($content_entries, $content);
     if (!$content_entries) return;
 
-    \add_filter(self::WPACKIO_ENTRIES_FILTER_KEY, function ($entries) use ($content_entries) {
-      return array_merge($entries, $content_entries);
-    });
+    $this->main_entries = array_merge($this->main_entries, $content_entries);
   }
 
   private function collect_entries(array &$entries, &$data)
