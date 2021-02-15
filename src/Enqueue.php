@@ -6,9 +6,9 @@ class Enqueue
 {
   const WPACKIO_ENTRIES_FILTER_KEY = 'theme/wpackio';
 
-  public function __construct(string $app_name, string $entry_group = 'app', string $output_path = 'dist', string $entry_namespace = 'Src\\\UI', array $static_entries = [])
+  public function __construct(string $app_name, string $entry_group = 'app', string $output_path = 'dist', string $entry_resolver_regex = '/^Src\\\UI\\\(\w+)\\\/', array $static_entries = [])
   {
-    $this->entry_namespace = $entry_namespace;
+    $this->entry_resolver_regex = $entry_resolver_regex;
 
     \add_action('wp_enqueue_scripts', function () use ($app_name, $entry_group, $output_path, $static_entries) {
       $enqueue = new \WPackio\Enqueue($app_name ?? 'app', $output_path, null, 'theme');
@@ -40,7 +40,7 @@ class Enqueue
     if ($data instanceof \WPDev\Component) {
       if ($data->do_not_enqueue) return;
 
-      preg_match('/^' . $this->entry_namespace . '\\\(\w+)\\\/', get_class($data), $matches);
+      preg_match($this->entry_resolver_regex, get_class($data), $matches);
       if (@$entry = $matches[1])
         if (!in_array($entry, $entries))
           $entries[] = $entry;
