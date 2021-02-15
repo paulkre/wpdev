@@ -6,16 +6,22 @@ class Enqueue
 {
   const WPACKIO_ENTRIES_FILTER_KEY = 'theme/wpackio';
 
-  public function __construct(string $app_name, string $entry_group = 'app', string $output_path = 'dist', string $entry_resolver_regex = '/^Src\\\UI\\\(\w+)\\\/', array $static_entries = [])
+  public function __construct(string $app_name, string $entry_group = 'app', string $output_path = 'dist', string $entry_resolver_regex = '/^Src\\\UI\\\(\w+)\\\/')
   {
     $this->entry_resolver_regex = $entry_resolver_regex;
+    $this->entry_group = $entry_group;
+    $this->enqueue = new \WPackio\Enqueue($app_name ?? 'app', $output_path, null, 'theme');
 
-    \add_action('wp_enqueue_scripts', function () use ($app_name, $entry_group, $output_path, $static_entries) {
-      $enqueue = new \WPackio\Enqueue($app_name ?? 'app', $output_path, null, 'theme');
-      $entries = \apply_filters(self::WPACKIO_ENTRIES_FILTER_KEY, $static_entries);
+    \add_action('wp_enqueue_scripts', function () {
+      $entries = \apply_filters(self::WPACKIO_ENTRIES_FILTER_KEY, []);
       foreach ($entries as &$entry)
-        $enqueue->enqueue($entry_group, $entry, []);
+        $this->enqueue($entry);
     });
+  }
+
+  function enqueue(string $entry, $entry_group = null)
+  {
+    $this->enqueue->enqueue($entry_group ?? $this->entry_group, $entry, []);
   }
 
   function enqueue_assets($content)
