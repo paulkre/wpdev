@@ -18,7 +18,10 @@ module.exports = {
     // If this has length === 1, then single compiler
     {
       name: "app",
-      entry: resolveEntry("./src/UI"),
+      entry: {
+        main: "./src/UI/Main/index.js",
+        content: "./src/UI/Content/index.js",
+      },
       // Extra webpack config to be passed directly
       webpackConfig: (config, merge) => {
         // merge the new module.rules with webpack-merge api

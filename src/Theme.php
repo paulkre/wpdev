@@ -66,10 +66,8 @@ class Theme
 
   static function render($content = null)
   {
-    ['static_component' => $static_component, 'enqueue' => $enqueue] = self::get_props();
+    ['static_component' => $static_component] = self::get_props();
     if ($static_component) $content = $static_component;
-
-    if ($enqueue) $enqueue->enqueue_assets($content);
 
     Component::render_content($content);
   }

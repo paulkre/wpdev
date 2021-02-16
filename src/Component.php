@@ -7,9 +7,6 @@ class Component
   public $props;
   public $children;
 
-  public $do_not_enqueue = false;
-  static $do_not_enqueue_children = false;
-
   function __construct($props = null, $children = null)
   {
     $this->props = $props;

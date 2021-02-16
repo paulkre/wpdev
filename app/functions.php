@@ -25,6 +25,10 @@ Theme::register_activation_callback(function () use ($landing_page_template_path
   }
 });
 
-Theme::init(new WPDev\Enqueue('WPDev'));
+$enqueue = new WPDev\Enqueue('WPDev');
+
+$enqueue->add_entry('main');
+
+Theme::init($enqueue);
 
 add_theme_support('post-thumbnails');
