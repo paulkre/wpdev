@@ -1,11 +1,13 @@
 {
   "name": "@paulkre/wpdev",
   "description": "A library for developing modern WordPress themes",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "main": "index.js",
   "author": "Paul Kretschel <paul.kretschel@icloud.com>",
   "license": "MIT",
-  "files": ["/index.js"],
+  "files": [
+    "/index.js"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/paulkre/wpdev.git"
