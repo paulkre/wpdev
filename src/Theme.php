@@ -5,24 +5,33 @@ namespace WPDev;
 class Theme
 {
   const ACTIVATE_ACTION = 'theme/activate';
-  const STATIC_COMPONENT_CLASS_FILTER = 'theme/static-component-class';
   const REST_NAMESPACE = 'theme/v1';
 
   const PROPS_FILTER_KEY = 'theme/props';
-  const DEFAULT_PROPS = ['enqueue' => null];
+  const DEFAULT_PROPS = ['enqueue' => null, 'static_component' => null];
 
   private static $initialized = false;
 
-  static function init(Enqueue $enqueue = null)
+  static function init(Enqueue $enqueue = null, string $static_component = null)
   {
     if (self::$initialized) return;
     self::$initialized = true;
 
     self::handle_activation();
 
-    \add_filter(self::PROPS_FILTER_KEY, function () use ($enqueue) {
-      return ['enqueue' => $enqueue];
+    \add_filter(self::PROPS_FILTER_KEY, function () use ($enqueue, $static_component) {
+      return ['enqueue' => $enqueue, 'static_component' => $static_component];
     });
+  }
+
+  private static function get_props()
+  {
+    return \apply_filters(self::PROPS_FILTER_KEY, self::DEFAULT_PROPS);
+  }
+
+  static function get_enqueue()
+  {
+    return self::get_props()['enqueue'];
   }
 
   static function register_post_type(string $name, array $props)
@@ -57,21 +66,12 @@ class Theme
 
   static function render($content = null)
   {
-    $static_component_class = \apply_filters(self::STATIC_COMPONENT_CLASS_FILTER, null);
-    if ($static_component_class) $content = new $static_component_class;
-
-    ['enqueue' => $enqueue] = \apply_filters(self::PROPS_FILTER_KEY, self::DEFAULT_PROPS);
+    ['static_component' => $static_component, 'enqueue' => $enqueue] = self::get_props();
+    if ($static_component) $content = $static_component;
 
     if ($enqueue) $enqueue->enqueue_assets($content);
 
     Component::render_content($content);
-  }
-
-  static function set_static_component_class(string $component_class)
-  {
-    \add_filter(self::STATIC_COMPONENT_CLASS_FILTER, function () use ($component_class) {
-      return $component_class;
-    });
   }
 
   static function get_post_by_slug(string $slug, string $post_type = 'page')
