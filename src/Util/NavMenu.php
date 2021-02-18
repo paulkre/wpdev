@@ -4,12 +4,12 @@ namespace WPDev\Util;
 
 class NavMenu
 {
-  static function create(string $menu_location, array $items)
+  static function create(string $menu_location, string $menu_name, array $items)
   {
-    $menu_id = \wp_create_nav_menu('Main');
+    $menu_id = \wp_create_nav_menu($menu_name);
 
     if (\is_wp_error($menu_id) && key_exists('menu_exists', $menu_id->errors)) {
-      $menu_id = \get_term_by('name', 'Main', 'nav_menu')->term_id;
+      $menu_id = \get_term_by('name', $menu_name, 'nav_menu')->term_id;
     } else {
       foreach ($items as &$item)
         if ($item)
