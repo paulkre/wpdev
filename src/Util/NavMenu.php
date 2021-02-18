@@ -57,4 +57,31 @@ class NavMenu
       foreach ($sub_items as &$sub_item)
         self::create_menu_item($menu_id, $sub_item, $item_id);
   }
+
+  static function get_item_tree(string $menu_location)
+  {
+    $locations = \get_nav_menu_locations();
+    @$location_id = $locations[$menu_location];
+    if (!$location_id) return;
+
+    $menu = \wp_get_nav_menu_object($location_id);
+    $data_items = \wp_get_nav_menu_items($menu->term_id, ['update_post_term_cache' => false]);
+
+    $item_map = [];
+    $item_tree = [];
+
+    foreach ($data_items as $data) {
+      $item = (object) [
+        'title' => $data->title,
+        'url' => $data->url,
+        'children' => []
+      ];
+      if ($data->menu_item_parent)
+        $item_map[$data->menu_item_parent]->children[] = $item;
+      else $item_tree[] = $item;
+      $item_map[$data->ID] = $item;
+    }
+
+    return $item_tree;
+  }
 }
