@@ -7,6 +7,7 @@ class Enqueue
   public function __construct(string $app_name, string $entry_group = 'app', string $output_path = 'dist')
   {
     $this->entry_group = $entry_group;
+    $this->output_path = $output_path;
     $this->enqueue = new \WPackio\Enqueue($app_name, $output_path, null, 'theme');
     $this->manifests = [];
     $this->entries = [];
@@ -35,7 +36,7 @@ class Enqueue
     $this->enqueue->enqueue($entry_group ?? $this->entry_group, $entry, []);
   }
 
-  function get_asset_by_filename($filename, $entry_group = null)
+  function find_asset_url($filename, $entry_group = null)
   {
     if (!$entry_group) $entry_group = $this->entry_group;
     @$manifest = $this->manifests[$entry_group];
@@ -43,6 +44,9 @@ class Enqueue
     if (!$manifest)
       $manifest = $this->manifests[$entry_group] = $this->enqueue->getManifest($entry_group);
 
-    return @$manifest["$this->entry_group/assets/$filename"];
+    $rel_path = @$manifest["$this->entry_group/assets/$filename"];
+    return $rel_path
+      ? parse_url(\get_template_directory_uri() . "/$this->output_path/" . $rel_path, \PHP_URL_PATH)
+      : null;
   }
 }
