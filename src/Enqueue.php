@@ -41,7 +41,7 @@ class Enqueue
     @$manifest = $this->manifests[$entry_group];
 
     if (!$manifest)
-      $manifest = $manifests[$entry_group] = $this->enqueue->get_manifest($entry_group);
+      $manifest = $this->manifests[$entry_group] = $this->enqueue->get_manifest($entry_group);
 
     return @$manifest["$this->entry_group/assets/$filename"];
   }
