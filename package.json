@@ -1,7 +1,7 @@
 {
   "name": "@paulkre/wpdev",
   "description": "A library for developing modern WordPress themes",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "main": "index.js",
   "author": "Paul Kretschel <paul.kretschel@icloud.com>",
   "license": "MIT",
