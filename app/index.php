@@ -1,5 +1,3 @@
 <?php
 
-WPDev\Theme::render(
-  new Src\UI\Main\Layout\Component(null, 'index.php'),
-);
+Src\UI\Main\Layout\Component::render(['children' => 'index.php']);

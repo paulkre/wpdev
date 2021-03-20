@@ -2,6 +2,6 @@
 
 WPDev\Theme::get_enqueue()->add_entries('content');
 
-WPDev\Theme::render(
-  new Src\UI\Main\Layout\Component(null, 'landing-page.php')
-);
+Src\UI\Main\Layout\Component::render([
+  'children' => new Src\UI\Main\PageTitle\Component(['title' => 'Landing Page']),
+]);

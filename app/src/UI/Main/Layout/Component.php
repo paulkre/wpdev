@@ -6,7 +6,7 @@ use WPDev\Theme;
 
 class Component extends \WPDev\Component
 {
-  function render()
+  static function render($props = null)
   {
 ?>
     <!DOCTYPE html>
@@ -20,8 +20,8 @@ class Component extends \WPDev\Component
       <?php \wp_head(); ?>
 
       <?php
-      $this->render_favicon_links();
-      $this->render_metadata();
+      self::render_favicon_links($props);
+      self::render_metadata($props);
       ?>
 
     </head>
@@ -32,7 +32,7 @@ class Component extends \WPDev\Component
 
       \wp_body_open();
 
-      $this->render_children();
+      self::render_children(@$props['children']);
 
       \wp_footer();
 
@@ -44,7 +44,7 @@ class Component extends \WPDev\Component
   <?php
   }
 
-  private function render_metadata()
+  private static function render_metadata($props)
   {
     if (\is_front_page()) {
       $title = \get_bloginfo('name');
@@ -55,11 +55,11 @@ class Component extends \WPDev\Component
     }
     $title = esc_html($title);
 
-    $img_id = $this->props['img-id'] ?? \get_post_thumbnail_id();
+    $img_id = $props['img-id'] ?? \get_post_thumbnail_id();
     $img_data = \wp_get_attachment_image_src($img_id, 'large');
 
-    $url = $this->props['url'] ?? \get_permalink();
-    $desc = $this->props['description'] ?? \get_the_excerpt();
+    $url = $props['url'] ?? \get_permalink();
+    $desc = $props['description'] ?? \get_the_excerpt();
     if (!$desc) $desc = Theme::get_field('website__general-settings__description', 'options');
     if ($desc) $desc = esc_html($desc);
 
@@ -83,9 +83,9 @@ class Component extends \WPDev\Component
   <?php
   }
 
-  private function render_favicon_links()
+  private static function render_favicon_links($props)
   {
-    $url = $this->props['favicon-url'] ?? \get_template_directory_uri() . '/static/meta';
+    $url = $props['favicon-url'] ?? \get_template_directory_uri() . '/static/meta';
   ?>
     <link rel="apple-touch-icon" sizes="57x57" href="<?= $url ?>/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="<?= $url ?>/apple-icon-60x60.png">
