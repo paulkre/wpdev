@@ -8,19 +8,19 @@ class Theme
   const REST_NAMESPACE = 'theme/v1';
 
   const PROPS_FILTER_KEY = 'theme/props';
-  const DEFAULT_PROPS = ['enqueue' => null, 'static_component' => null];
+  const DEFAULT_PROPS = ['enqueue' => null];
 
   private static $initialized = false;
 
-  static function init(Enqueue $enqueue = null, string $static_component = null)
+  static function init(Enqueue $enqueue = null)
   {
     if (self::$initialized) return;
     self::$initialized = true;
 
     self::handle_activation();
 
-    \add_filter(self::PROPS_FILTER_KEY, function () use ($enqueue, $static_component) {
-      return ['enqueue' => $enqueue, 'static_component' => $static_component];
+    \add_filter(self::PROPS_FILTER_KEY, function () use ($enqueue) {
+      return ['enqueue' => $enqueue];
     });
   }
 
@@ -62,14 +62,6 @@ class Theme
       if (!empty($_GET['activated']) && is_admin())
         do_action(self::ACTIVATE_ACTION);
     });
-  }
-
-  static function render($content = null)
-  {
-    ['static_component' => $static_component] = self::get_props();
-    if ($static_component) $content = $static_component;
-
-    Component::render_content($content);
   }
 
   static function get_post_by_slug(string $slug, string $post_type = 'page')
