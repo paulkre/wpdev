@@ -23,7 +23,7 @@
     }
   },
   "require": {
-    "wpackio/enqueue": "^2.2"
+    "wpackio/enqueue": "^3"
   },
   "require-dev": {
     "paulthewalton/acf-pro-stubs": "5.8.9.1"
