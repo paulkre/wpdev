@@ -11,41 +11,28 @@ class PostType
     @$groups = $props['acf_groups'];
     if (!$groups) return;
 
+    $groups = Util::parse_groups($post_type_name, $groups);
+
     \add_action('init', function () use ($post_type_name, $groups) {
-      $i = 0;
-      foreach ($groups as $name => &$props)
-        self::register_group($post_type_name, $name, $props, $i++);
+      foreach ($groups as $group) {
+        $group['location'] = [[[
+          'param' => 'post_type',
+          'operator' => '==',
+          'value' => $post_type_name
+        ]]];
+
+        \acf_add_local_field_group($group);
+      }
     });
 
     \add_action('admin_init', function () use ($post_type_name, $groups) {
       $fields = [];
-      foreach ($groups as &$props)
+      foreach ($groups as $props)
         if (@$grp_fields = $props['fields'])
           $fields = \array_merge($fields, $grp_fields);
 
       if ($fields) self::manage_admin_columns($post_type_name, $fields);
     });
-  }
-
-  private static function register_group(string $post_type_name, string $name, $props, $position = 0)
-  {
-    @[
-      'title' => $title,
-      'fields' => $fields,
-    ] = $props;
-    if (!$title || !$fields) return;
-
-    \acf_add_local_field_group([
-      'key' => $name,
-      'title' => $title,
-      'fields' => $fields,
-      'menu_order' => $position,
-      'location' => [[[
-        'param' => 'post_type',
-        'operator' => '==',
-        'value' => $post_type_name
-      ]]]
-    ]);
   }
 
   private static function manage_admin_columns(string $name, $fields)

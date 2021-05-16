@@ -16,10 +16,12 @@ class OptionsPage
       'title' => $title,
       'icon_url' => $icon_url,
       'use_tabs' => $use_tabs,
-      'acf_groups' => $acf_groups,
+      'acf_groups' => $groups,
     ] = $props;
 
-    if (!$acf_groups) return;
+    if (!$groups) return;
+
+    $groups = Util::parse_groups($name, $groups);
 
     \acf_add_options_page([
       'page_title'   => $title,
@@ -32,10 +34,40 @@ class OptionsPage
     ]);
     self::$registered_count++;
 
+    $location = [[[
+      'param' => 'options_page',
+      'operator' => '==',
+      'value' => $name
+    ]]];
+
     if (!$use_tabs) {
-      foreach ($acf_groups as $grp_name => &$grp_props)
-        self::register_group($name, $grp_name, $grp_props);
-    } else self::register_groups_with_tabs($name, $acf_groups);
+      foreach ($groups as $group) {
+        $group['location'] = $location;
+        \acf_add_local_field_group($group);
+      }
+    } else {
+      $fields = [];
+
+      foreach ($groups as $group) {
+        $fields[] = [
+          'key' => $group['key'],
+          'name' => $group['key'],
+          'label' => $group['title'],
+          'type' => 'tab',
+        ];
+
+        foreach ($group['fields'] as $field)
+          $fields[] = $field;
+
+        \acf_add_local_field_group([
+          'key' => $name,
+          'title' => __('Settings'),
+          'fields' => $fields,
+          'location' => $location,
+          'style' => 'seamless'
+        ]);
+      }
+    }
   }
 
   static function initialize_fields($field_data)
@@ -46,58 +78,5 @@ class OptionsPage
       if (!empty(Theme::get_field($key, 'options'))) continue;
       Theme::update_field($key, $value, 'options');
     }
-  }
-
-  private static function register_group(string $name, string $grp_name, $props)
-  {
-    @[
-      'title' => $title,
-      'fields' => $fields,
-    ] = $props;
-
-    \acf_add_local_field_group([
-      'key' => $grp_name,
-      'title' => $title,
-      'fields' => $fields,
-      'location' => [[[
-        'param' => 'options_page',
-        'operator' => '==',
-        'value' => $name
-      ]]]
-    ]);
-  }
-
-  private static function register_groups_with_tabs(string $name, $groups)
-  {
-    $fields = [];
-
-    foreach ($groups as $grp_name => &$grp) {
-      @[
-        'title' => $grp_title,
-        'fields' => $grp_fields,
-      ] = $grp;
-
-      $fields[] = [
-        'name' => $grp_name,
-        'key' => $grp_name,
-        'label' => $grp_title,
-        'type' => 'tab'
-      ];
-
-      foreach ($grp_fields as &$field)
-        $fields[] = $field;
-    }
-
-    \acf_add_local_field_group([
-      'key' => $name,
-      'title' => __('Settings'),
-      'fields' => $fields,
-      'location' => [[[
-        'param' => 'options_page',
-        'operator' => '==',
-        'value' => $name
-      ]]],
-      'style' => 'seamless'
-    ]);
   }
 }

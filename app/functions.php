@@ -9,6 +9,42 @@ $landing_page_template_path = 'templates/landing-page.php';
 
 Theme::register_page_template($landing_page_template_path, [
   'disable_editor' => true,
+
+  'acf_groups' => [
+    'settings' => [
+      'title' => 'Settings',
+      'fields' => [
+        'publication' => [
+          'type' => 'text',
+          'label' => 'Publication',
+        ],
+        'authors' => [
+          'type' => 'repeater',
+          'label' => 'Authors',
+          'sub_fields' => [
+            'name' => [
+              'type' => 'text',
+              'label' => 'Name',
+            ],
+            'age' => [
+              'type' => 'number',
+              'label' => 'Age',
+            ],
+          ]
+        ],
+      ]
+    ],
+
+    'metadata' => [
+      'title' => 'Metadata',
+      'fields' => [
+        'value' => [
+          'label' => 'Value',
+          'type' => 'text',
+        ]
+      ]
+    ]
+  ]
 ]);
 
 Theme::register_activation_callback(function () use ($landing_page_template_path) {
