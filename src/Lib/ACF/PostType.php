@@ -6,7 +6,7 @@ class PostType
 {
   static function register(string $post_type_name, $props)
   {
-    if (!function_exists('acf_add_local_field_group')) return;
+    if (!Util::acf_active()) return;
 
     @$groups = $props['acf_groups'];
     if (!$groups) return;

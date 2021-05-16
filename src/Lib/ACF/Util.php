@@ -4,7 +4,12 @@ namespace WPDev\Lib\ACF;
 
 class Util
 {
-  const SEP = '__';
+  const SEPARATOR = '__';
+
+  static function acf_active()
+  {
+    return class_exists('ACF');
+  }
 
   static function &parse_groups(string $name, &$groups)
   {
@@ -14,7 +19,7 @@ class Util
       @$fields = $group['fields'];
       if (!$fields) return;
 
-      $key = $name . self::SEP . $group_key;
+      $key = $name . self::SEPARATOR . $group_key;
       $group['key'] = $key;
       $group['menu_order'] = count($parsed);
       $group['fields'] = self::parse_fields($key, $fields);
@@ -31,7 +36,7 @@ class Util
     foreach ($fields as $field_key => $field) {
       if (empty($field['type']) || empty($field['label'])) continue;
 
-      $key = $parent_key . self::SEP . $field_key;
+      $key = $parent_key . self::SEPARATOR . $field_key;
       $field['key'] = $field['name'] = $key;
 
       if (@$field['type'] == 'repeater' && is_array(@$field['sub_fields']))

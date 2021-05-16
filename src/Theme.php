@@ -12,6 +12,8 @@ class Theme
 
   private static $initialized = false;
 
+  private static $acf_dao = null;
+
   static function init(Enqueue $enqueue = null)
   {
     if (self::$initialized) return;
@@ -81,14 +83,20 @@ class Theme
     return $id;
   }
 
-  static function get_field($selector, $post_id = false, $format_value = true)
+  private static function get_acf_dao()
   {
-    return \function_exists('get_field') ? \get_field($selector, $post_id, $format_value) : false;
+    if (!self::$acf_dao) self::$acf_dao = new Lib\ACF\DAO(\get_post());
+    return self::$acf_dao;
   }
 
-  static function update_field($selector, $value, $post_id = false)
+  static function get_field(array $args)
   {
-    return \function_exists('update_field') ? \update_field($selector, $value, $post_id) : false;
+    return self::get_acf_dao()->get($args);
+  }
+
+  static function update_field(array $args, $value)
+  {
+    return self::get_acf_dao()->update($args, $value);
   }
 
   static function admin_print($msg, $type = null, $is_dismissable = false)

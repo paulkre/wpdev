@@ -8,13 +8,13 @@ class Page
 {
   static function register_template(string $path, $props)
   {
-    if (!function_exists('acf_add_local_field_group')) return;
+    if (!Util::acf_active()) return;
 
     @$groups = $props['acf_groups'];
     if (!$groups) return;
 
     $groups = Util::parse_groups(
-      explode('.', basename($path))[0],
+      self::template_path_to_name($path),
       $groups
     );
 
@@ -31,11 +31,16 @@ class Page
 
   static function initialize_fields(int $pid, $field_data)
   {
-    if (!is_array($field_data)) return;
+    if (!Util::acf_active() || !is_array($field_data)) return;
 
     foreach ($field_data as $key => $value) {
-      if (Theme::get_field($key, $pid)) continue;
-      Theme::update_field($key, $value, $pid);
+      if (\get_field($key, $pid)) continue;
+      \update_field($key, $value, $pid);
     }
+  }
+
+  static function template_path_to_name($path)
+  {
+    return explode('.', basename($path))[0];
   }
 }

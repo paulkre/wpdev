@@ -10,7 +10,7 @@ class OptionsPage
 
   static function register(string $name, $props)
   {
-    if (!function_exists('acf_add_options_page')) return;
+    if (!Util::acf_active()) return;
 
     @[
       'title' => $title,
@@ -72,11 +72,11 @@ class OptionsPage
 
   static function initialize_fields($field_data)
   {
-    if (!is_array($field_data)) return;
+    if (!Util::acf_active() || !is_array($field_data)) return;
 
     foreach ($field_data as $key => $value) {
-      if (!empty(Theme::get_field($key, 'options'))) continue;
-      Theme::update_field($key, $value, 'options');
+      if (!empty(\get_field($key, 'options'))) continue;
+      \update_field($key, $value, 'options');
     }
   }
 }
