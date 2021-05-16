@@ -60,7 +60,7 @@ class Component extends \WPDev\Component
 
     $url = $props['url'] ?? \get_permalink();
     $desc = $props['description'] ?? \get_the_excerpt();
-    if (!$desc) $desc = Theme::get_field('website__general-settings__description', 'options');
+    if (!$desc) $desc = \get_bloginfo('description');
     if ($desc) $desc = esc_html($desc);
 
   ?>
