@@ -45,17 +45,19 @@ class Util
         \add_filter(
           "acf/load_value/key=$key",
           function ($items) use ($key) {
-            $clean_items = [];
-
-            $prefix_length = strlen($key) + strlen(self::SEPARATOR);
-            foreach ($items as $item) {
-              $clean_item = [];
-              foreach ($item as $prefixed_key => $value)
-                $clean_item[substr($prefixed_key, $prefix_length)] = $value;
-              $clean_items[] = $clean_item;
+            $pref_length = strlen($key) + strlen(self::SEPARATOR);
+            foreach ($items as &$item) {
+              $keys = array_keys($item);
+              $len = count($keys);
+              $i = 0;
+              while ($i < $len) {
+                $pref_key = $keys[$i];
+                $item[substr($pref_key, $pref_length)] = &$item[$pref_key];
+                $i++;
+              }
             }
 
-            return $clean_items;
+            return $items;
           },
           99
         );
