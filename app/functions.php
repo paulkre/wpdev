@@ -30,6 +30,20 @@ Theme::register_page_template($landing_page_template_path, [
               'type' => 'number',
               'label' => 'Age',
             ],
+            'possessions' => [
+              'type' => 'repeater',
+              'label' => 'Possessions',
+              'sub_fields' => [
+                'value' => [
+                  'label' => 'Value',
+                  'type' => 'text',
+                ],
+                'name' => [
+                  'label' => 'Name',
+                  'type' => 'text',
+                ]
+              ]
+            ]
           ]
         ],
       ]

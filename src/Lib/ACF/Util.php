@@ -39,8 +39,27 @@ class Util
       $key = $parent_key . self::SEPARATOR . $field_key;
       $field['key'] = $field['name'] = $key;
 
-      if (@$field['type'] == 'repeater' && is_array(@$field['sub_fields']))
+      if (@$field['type'] == 'repeater' && is_array(@$field['sub_fields'])) {
         $field['sub_fields'] = self::parse_fields($key, $field['sub_fields']);
+
+        \add_filter(
+          "acf/load_value/key=$key",
+          function ($items) use ($key) {
+            $clean_items = [];
+
+            $prefix_length = strlen($key) + strlen(self::SEPARATOR);
+            foreach ($items as $item) {
+              $clean_item = [];
+              foreach ($item as $prefixed_key => $value)
+                $clean_item[substr($prefixed_key, $prefix_length)] = $value;
+              $clean_items[] = $clean_item;
+            }
+
+            return $clean_items;
+          },
+          99
+        );
+      }
 
       $parsed[] = $field;
     }
