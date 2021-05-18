@@ -18,21 +18,22 @@ class DAO
     $this->post = $post;
   }
 
-  function get($args)
+  function get($key_value)
   {
-    if (!Util::acf_active()) return false;
-    return \get_field($this->args_to_key($args), $this->post);
+    if (!Util::acf_active() || !$key_value) return false;
+    return \get_field($this->parse_key($key_value), $this->post);
   }
 
-  function update($args, $value)
+  function update($key_value, $value)
   {
-    if (!Util::acf_active()) return false;
-    return \update_field($this->args_to_key($args), $value, $this->post);
+    if (!Util::acf_active() || !$value) return false;
+    return \update_field($this->parse_key($key_value), $value, $this->post);
   }
 
-  private function args_to_key($args)
+  private function parse_key($value)
   {
-    array_unshift($args, $this->entity_name);
-    return implode(Util::SEPARATOR, $args);
+    if (is_string($value)) $value = explode('/', $value);
+    array_unshift($value, $this->entity_name);
+    return implode(Util::SEPARATOR, $value);
   }
 }

@@ -89,14 +89,14 @@ class Theme
     return self::$acf_dao;
   }
 
-  static function get_field(array $args)
+  static function get_field($key)
   {
-    return self::get_acf_dao()->get($args);
+    return self::get_acf_dao()->get($key);
   }
 
-  static function update_field(array $args, $value)
+  static function update_field($key, $value)
   {
-    return self::get_acf_dao()->update($args, $value);
+    return self::get_acf_dao()->update($key, $value);
   }
 
   static function admin_print($msg, $type = null, $is_dismissable = false)
