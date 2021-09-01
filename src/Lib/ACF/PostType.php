@@ -62,7 +62,7 @@ class PostType
       if (!key_exists($column, $column_fields)) return;
 
       $field = $column_fields[$column];
-      $value = \WPDev\Theme::get_field($column);
+      $value = \get_field($column, $post_id);
 
       if (!$value) return;
 
