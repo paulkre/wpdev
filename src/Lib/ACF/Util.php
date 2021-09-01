@@ -17,7 +17,7 @@ class Util
 
     foreach ($groups as $group_key => &$group) {
       @$fields = $group['fields'];
-      if (!$fields) return;
+      if (!$fields) continue;
 
       $key = $name . self::SEPARATOR . $group_key;
       $group['key'] = $key;
