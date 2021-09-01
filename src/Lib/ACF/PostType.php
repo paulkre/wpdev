@@ -112,6 +112,14 @@ class PostType
         return \DateTime::createFromFormat('d/m/Y', $value)->format('d.m.Y');
       case 'post_object':
         return '<a href="' . \admin_url() . 'post.php?post=' . $value->ID . '&action=edit">' . $value->post_title . '</a>';
+      case 'taxonomy':
+        if (!is_array($value)) $value = [$value];
+        return join(
+          ', ',
+          array_map(function ($term_id) {
+            return \get_term($term_id)->name;
+          }, $value)
+        );
       default:
         return null;
     }
