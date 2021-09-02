@@ -89,9 +89,9 @@ class Theme
     return self::$acf_dao;
   }
 
-  static function get_field($key)
+  static function get_field($key, $format_value = true)
   {
-    return self::get_acf_dao()->get($key);
+    return self::get_acf_dao()->get($key, $format_value);
   }
 
   static function update_field($key, $value)

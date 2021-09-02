@@ -18,10 +18,10 @@ class DAO
     $this->post = $post;
   }
 
-  function get($key_value)
+  function get($key_value, $format_value = true)
   {
     if (!Util::acf_active() || !$key_value) return false;
-    return \get_field($this->parse_key($key_value), $this->post);
+    return \get_field($this->parse_key($key_value), $this->post, $format_value);
   }
 
   function update($key_value, $value)
