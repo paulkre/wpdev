@@ -11,7 +11,7 @@ class DAO
   {
     $this->entity_name = $post->post_type === 'page'
       ? Page::template_path_to_name(
-        get_page_template_slug()
+        get_page_template_slug($post)
       )
       : $post->post_type;
 
