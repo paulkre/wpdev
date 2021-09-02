@@ -6,6 +6,7 @@ class DAO
 {
   private $post;
   private $entity_name;
+  private $acf_inactive;
 
   function __construct(\WP_Post $post)
   {
@@ -16,17 +17,18 @@ class DAO
       : $post->post_type;
 
     $this->post = $post;
+    $this->acf_inactive = !Util::acf_active();
   }
 
   function get($key_value, $format_value = true)
   {
-    if (!Util::acf_active() || !$key_value) return false;
+    if ($this->acf_inactive || !$key_value) return false;
     return \get_field($this->parse_key($key_value), $this->post, $format_value);
   }
 
   function update($key_value, $value)
   {
-    if (!Util::acf_active() || !$value) return false;
+    if ($this->acf_inactive || !$value) return false;
     return \update_field($this->parse_key($key_value), $value, $this->post);
   }
 
