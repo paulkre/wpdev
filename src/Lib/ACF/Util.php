@@ -45,6 +45,8 @@ class Util
         \add_filter(
           "acf/load_value/key=$key",
           function ($items) use ($key) {
+            if (!$items) return $items;
+
             $pref_length = strlen($key) + strlen(self::SEPARATOR);
             foreach ($items as &$item) {
               $keys = array_keys($item);
